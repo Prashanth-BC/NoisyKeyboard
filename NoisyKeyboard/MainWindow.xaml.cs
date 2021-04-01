@@ -80,11 +80,6 @@ namespace NoisyKeyboard
             this.Close();
         }
 
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
         private void sliderVolume_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             KeyboardListener.PlaySound();

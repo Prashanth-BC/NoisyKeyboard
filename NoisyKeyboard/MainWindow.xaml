@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NoisyKeyboard"
         mc:Ignorable="d"
-        Title="NoisyKeyboard" Height="136.604" Width="200" ResizeMode="NoResize" Topmost="True" Deactivated="Window_Deactivated">
+        Title="NoisyKeyboard" Height="136.604" Width="200" ResizeMode="NoResize">
     <StackPanel Orientation="Vertical">
         <ComboBox x:Name="comboboxSounds" HorizontalContentAlignment="Center" SelectionChanged="comboboxSounds_SelectionChanged"/>
         <Separator/>
