@@ -113,6 +113,9 @@
     <Content Include="data\sounds\bubbles\8.wav" />
     <Content Include="data\sounds\bubbles\enter.wav" />
     <Resource Include="data\sounds\bubbles\license.txt" />
+    <Content Include="data\sounds\Mechanical2\1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\sounds\mechanical\1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
