@@ -99,7 +99,7 @@ namespace NoisyKeyboard
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
-        private static void PlaySound()
+        public static void PlaySound()
         {
             var mediaPlayer = _mediaPlayers.Pop();
             mediaPlayer.Dispatcher.Invoke(() => {

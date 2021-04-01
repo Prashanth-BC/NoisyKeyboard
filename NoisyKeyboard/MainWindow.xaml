@@ -12,7 +12,7 @@
         <StackPanel Orientation="Horizontal">
             <Label Content=" 🔊  " FontSize="14"/>
             <Separator/>
-            <Slider x:Name="sliderVolume"  Maximum="100" Minimum="10" Value="10" VerticalAlignment="Center" ValueChanged="sliderVolume_ValueChanged" Width="150" />
+            <Slider x:Name="sliderVolume"  Thumb.DragCompleted="sliderVolume_DragCompleted" Maximum="100" Minimum="10" Value="10" VerticalAlignment="Center" ValueChanged="sliderVolume_ValueChanged" Width="150" />
         </StackPanel>
         <Separator/>
         <CheckBox x:Name="btnCheckEnableSound" Content="Enable Sound" Checked="btnCheckEnableSound_Checked" Unchecked="btnCheckEnableSound_Unchecked"/>

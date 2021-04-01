@@ -84,5 +84,10 @@ namespace NoisyKeyboard
         {
             WindowState = WindowState.Minimized;
         }
+
+        private void sliderVolume_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            KeyboardListener.PlaySound();
+        }
     }
 }
