@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+﻿// File: KeyboardListener.cs
+// Author: Prashanth
+// This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY.
+// without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Media;
@@ -36,6 +37,7 @@ namespace NoisyKeyboard
         private static Stack<MediaPlayer> _mediaPlayers = new Stack<MediaPlayer>();
         private static double _volume = 10;
         private static string _soundFolder;
+        private static object _synchObject = new object();
         public static void SetVolume(double volume)
         {
             if(volume < 10)
@@ -78,15 +80,18 @@ namespace NoisyKeyboard
             {
                 _soundFolder =  $"{Directory.GetCurrentDirectory()}\\data\\sounds\\mechanical"; 
             }
-
-            _mediaPlayers.Clear();
-            for (int i = 0; i < 20; i++)
+            lock (_synchObject)
             {
-                var mediaPlayer = new MediaPlayer();
-                Directory.GetCurrentDirectory();
-                mediaPlayer.Open(new Uri($"{_soundFolder}\\1.wav"));
-                _mediaPlayers.Push(mediaPlayer);
+                _mediaPlayers.Clear();
+                for (int i = 0; i < 20; i++)
+                {
+                    var mediaPlayer = new MediaPlayer();
+                    Directory.GetCurrentDirectory();
+                    mediaPlayer.Open(new Uri($"{_soundFolder}\\1.wav"));
+                    _mediaPlayers.Push(mediaPlayer);
+                }
             }
+            
         }
 
         private static IntPtr HookCallback(
@@ -101,13 +106,17 @@ namespace NoisyKeyboard
         }
         public static void PlaySound()
         {
-            var mediaPlayer = _mediaPlayers.Pop();
-            mediaPlayer.Dispatcher.Invoke(() => {
-                mediaPlayer.Stop();
-                mediaPlayer.Volume = _volume / 100.0;
-                mediaPlayer.Play();
-                _mediaPlayers.Push(mediaPlayer);
-            });
+            lock (_synchObject)
+            {
+                var mediaPlayer = _mediaPlayers.Pop();
+                mediaPlayer.Dispatcher.Invoke(() => {
+                    mediaPlayer.Stop();
+                    mediaPlayer.Volume = _volume / 100.0;
+                    mediaPlayer.Play();
+                    _mediaPlayers.Push(mediaPlayer);
+                });
+            }
+           
             
             
 

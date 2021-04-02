@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿// File: MainWindow.xaml.cs
+// Author: Prashanth
+// This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY.
+// without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace NoisyKeyboard
 {
-    
+
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -28,16 +21,16 @@ namespace NoisyKeyboard
     public partial class MainWindow : Window
     {
         private bool forceExit = false;
-        
+
         public MainWindow()
         {
             InitializeComponent();
             var soundDirectories = Directory.EnumerateDirectories($"{Directory.GetCurrentDirectory()}\\data\\sounds");
-            foreach(var folder in soundDirectories)
+            foreach (var folder in soundDirectories)
             {
                 ComboBoxItem comboBoxItem = new ComboBoxItem();
                 var contentText = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(folder.Split('\\').Last().ToLower());
-                
+
                 comboBoxItem.Content = contentText;
                 comboBoxItem.Tag = folder;
                 comboboxSounds.Items.Add(comboBoxItem);

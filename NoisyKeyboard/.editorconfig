@@ -1,0 +1,11 @@
+# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+root = true
+
+# All files
+[*]
+indent_style = space
+indent_size = 4
+file_header_template = File: {fileName}\nAuthor: Prashanth\nThis program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY.\nwithout even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# Xml files
+[*.xml]
+indent_size = 2
