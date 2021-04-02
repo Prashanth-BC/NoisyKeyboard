@@ -15,6 +15,10 @@ namespace NoisyKeyboard
 {
     class KeyboardListener : IDisposable
     {
+        public enum KEY_STATE{
+            ON_KEY_UP,
+            ON_KEY_DOWN
+        }
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook,
         LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -31,6 +35,7 @@ namespace NoisyKeyboard
         private static extern IntPtr GetModuleHandle(string lpModuleName);
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private bool disposedValue;
@@ -38,6 +43,7 @@ namespace NoisyKeyboard
         private static double _volume = 10;
         private static string _soundFolder;
         private static object _synchObject = new object();
+        private static int _onKeyUpOrDown = 0x0101;
         public static void SetVolume(double volume)
         {
             if(volume < 10)
@@ -97,7 +103,7 @@ namespace NoisyKeyboard
         private static IntPtr HookCallback(
         int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            if (nCode >= 0 && wParam == (IntPtr)_onKeyUpOrDown)
             {
                 //Call the music play here
                 new Thread(PlaySound).Start();
@@ -121,16 +127,28 @@ namespace NoisyKeyboard
             
 
         }
-        public static void StartHook()
+        public static void StartNoise(KEY_STATE keyState)
         {
-            if(_hookID == IntPtr.Zero)
+            StopNoise();
+            if(keyState == KEY_STATE.ON_KEY_DOWN)
+            {
+                Trace.WriteLine("Setting for key down");
+                _onKeyUpOrDown = WM_KEYDOWN;
+            }
+            else
+            {
+                Trace.WriteLine("Setting for key up");
+                _onKeyUpOrDown = WM_KEYUP;
+            }
+            if (_hookID == IntPtr.Zero)
             {
                 _hookID = SetHook(_proc);
             }
+            
            
 
         }
-        public static void StopHook()
+        public static void StopNoise()
         {
             if (_hookID != IntPtr.Zero)
             {
@@ -146,7 +164,7 @@ namespace NoisyKeyboard
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
-                    KeyboardListener.StopHook();
+                    KeyboardListener.StopNoise();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer

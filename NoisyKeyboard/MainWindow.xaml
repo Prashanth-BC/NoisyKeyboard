@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NoisyKeyboard"
         mc:Ignorable="d"
-        Title="NoisyKeyboard" Height="136.604" Width="200" ResizeMode="NoResize">
+        Title="NoisyKeyboard" Height="185.517" Width="200" ResizeMode="NoResize">
     <StackPanel Orientation="Vertical">
         <ComboBox x:Name="comboboxSounds" HorizontalContentAlignment="Center" SelectionChanged="comboboxSounds_SelectionChanged"/>
         <Separator/>
@@ -14,8 +14,11 @@
             <Separator/>
             <Slider x:Name="sliderVolume"  Thumb.DragCompleted="sliderVolume_DragCompleted" Maximum="100" Minimum="10" Value="10" VerticalAlignment="Center" ValueChanged="sliderVolume_ValueChanged" Width="150" />
         </StackPanel>
+        
         <Separator/>
-        <CheckBox x:Name="btnCheckEnableSound" Content="Enable Sound" Checked="btnCheckEnableSound_Checked" Unchecked="btnCheckEnableSound_Unchecked"/>
+        <RadioButton x:Name="radioBtnSoundNone" Content="No sound" Checked="radioBtnSoundNone_Checked" IsChecked="True"/>
+        <RadioButton x:Name="radioBtnSoundOnKeyUp" Content="Sound on Key Up" Checked="radioBtnSoundOnKeyUp_Checked"/>
+        <RadioButton x:Name="radioBtnSoundOnKeyDown" Content="Sound on Key down" Checked="radioBtnSoundOnKeyDown_Checked"/>
         <Separator/>
         <Button x:Name="btnExit" Content="Exit" Click="btnExit_Click"/>
         <Separator/>

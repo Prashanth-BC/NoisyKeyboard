@@ -57,14 +57,9 @@ namespace NoisyKeyboard
             KeyboardListener.SetMusicFolder((String)((ComboBoxItem)comboboxSounds.SelectedItem).Tag);
         }
 
-        private void btnCheckEnableSound_Checked(object sender, RoutedEventArgs e)
-        {
-            KeyboardListener.StartHook();
-        }
-
         private void btnCheckEnableSound_Unchecked(object sender, RoutedEventArgs e)
         {
-            KeyboardListener.StopHook();
+            KeyboardListener.StopNoise();
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
@@ -76,6 +71,21 @@ namespace NoisyKeyboard
         private void sliderVolume_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             KeyboardListener.PlaySound();
+        }
+
+        private void radioBtnSoundOnKeyUp_Checked(object sender, RoutedEventArgs e)
+        {
+            KeyboardListener.StartNoise(KeyboardListener.KEY_STATE.ON_KEY_UP);
+        }
+        
+        private void radioBtnSoundOnKeyDown_Checked(object sender, RoutedEventArgs e)
+        {
+            KeyboardListener.StartNoise(KeyboardListener.KEY_STATE.ON_KEY_DOWN);
+        }
+
+        private void radioBtnSoundNone_Checked(object sender, RoutedEventArgs e)
+        {
+            KeyboardListener.StopNoise();
         }
     }
 }
