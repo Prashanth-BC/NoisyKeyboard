@@ -1,0 +1,22 @@
+{
+    "soundAtStart": "Mechanical2",
+    "volumeAtStart": 50.0,
+    "actionAtStart":  "No Sound",
+
+    "ignoreKeys": {
+        "CAPS_LOCK": 20,
+        "ARROW_LEFT": 37,
+        "ARROW_UP": 38,
+        "ARROW_RIGHT": 39,
+        "ARROW_DOWN": 40,
+        "SHIFT_LEFT": 160,
+        "SHIFT_RIGHT": 161,
+        "CTRL_LEFT": 162,
+        "CTRL_RIGHT": 163,
+        "ALT_LEFT": 164,
+        "ALT_GR": 162,
+        "ALT_RIGHT": 165,
+        "DRUCK": 44,
+        "FUNCTION": 255
+    }
+}

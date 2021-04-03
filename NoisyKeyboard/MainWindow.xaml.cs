@@ -26,6 +26,8 @@ namespace NoisyKeyboard
         {
             InitializeComponent();
             var soundDirectories = Directory.EnumerateDirectories($"{Directory.GetCurrentDirectory()}\\data\\sounds");
+            int selectedIndex = 0;
+            var config = Config.GetConfig();
             foreach (var folder in soundDirectories)
             {
                 ComboBoxItem comboBoxItem = new ComboBoxItem();
@@ -34,10 +36,28 @@ namespace NoisyKeyboard
                 comboBoxItem.Content = contentText;
                 comboBoxItem.Tag = folder;
                 comboboxSounds.Items.Add(comboBoxItem);
+                if (config.soundAtStart == contentText)
+                {
+                    comboboxSounds.SelectedIndex = selectedIndex;
+                }
+                selectedIndex++;
             }
+            sliderVolume.Value = config.volumeAtStart;
+
+            radioBtnSoundNone.IsChecked = true;
+
+            if (config.actionAtStart == (string)radioBtnSoundOnKeyUp.Content)
+            {
+                radioBtnSoundOnKeyUp.IsChecked = true;
+            }
+            if (config.actionAtStart == (string)radioBtnSoundOnKeyDown.Content)
+            {
+                radioBtnSoundOnKeyDown.IsChecked = true;
+            }
+
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width;
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight - this.Height - 30;
-            comboboxSounds.SelectedIndex = 0;
+
         }
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -77,7 +97,7 @@ namespace NoisyKeyboard
         {
             KeyboardListener.StartNoise(KeyboardListener.KEY_STATE.ON_KEY_UP);
         }
-        
+
         private void radioBtnSoundOnKeyDown_Checked(object sender, RoutedEventArgs e)
         {
             KeyboardListener.StartNoise(KeyboardListener.KEY_STATE.ON_KEY_DOWN);
@@ -86,6 +106,30 @@ namespace NoisyKeyboard
         private void radioBtnSoundNone_Checked(object sender, RoutedEventArgs e)
         {
             KeyboardListener.StopNoise();
+        }
+
+        private void btnSaveAsDefault_Click(object sender, RoutedEventArgs e)
+        {
+            var config = Config.GetConfig();
+            config.volumeAtStart = sliderVolume.Value;
+            config.soundAtStart = comboboxSounds.Text;
+            if (radioBtnSoundNone.IsChecked.GetValueOrDefault(false))
+            {
+                config.actionAtStart = (string)radioBtnSoundNone.Content;
+
+            }
+            if (radioBtnSoundOnKeyUp.IsChecked.GetValueOrDefault(false))
+            {
+                config.actionAtStart = (string)radioBtnSoundOnKeyUp.Content;
+
+            }
+            if (radioBtnSoundOnKeyDown.IsChecked.GetValueOrDefault(false))
+            {
+                config.actionAtStart = (string)radioBtnSoundOnKeyDown.Content;
+
+            }
+            Config.SaveConfig();
+            MessageBox.Show("Settings saved.");
         }
     }
 }

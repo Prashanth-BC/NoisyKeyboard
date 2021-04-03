@@ -11,6 +11,9 @@ using System.Threading;
 using System.Windows.Media;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using System.ComponentModel;
+
 namespace NoisyKeyboard
 {
     class KeyboardListener : IDisposable
@@ -19,24 +22,7 @@ namespace NoisyKeyboard
             ON_KEY_UP,
             ON_KEY_DOWN
         }
-        //20,37,38,39,40,44, 160, 162, 164, 163, 165, 255
-        private enum KeyCode
-        {
-            CAPS_LOCK = 20,
-            ARROW_LEFT = 37,
-            ARROW_UP = 38,
-            ARROW_RIGHT = 39,
-            ARROW_DOWN = 40,
-            SHIFT_LEFT = 160,
-            SHIFT_RIGHT = 161,
-            CTRL_LEFT = 162,
-            CTRL_RIGHT = 163,
-            ALT_LEFT = 164,
-            ALT_GR = 162,
-            ALT_RIGHT = 165,
-            DRUCK = 44,
-            FUNCTION = 255
-        }
+        
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook,
         LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -68,18 +54,15 @@ namespace NoisyKeyboard
         {
             if(volume < 10)
             { volume = 10; }
-            _volume = volume;
-            foreach( var v in Enum.GetValues(typeof(KeyCode)))
-            {
-                _ignoreKeys.Add((int)v);
-            }
+            _volume = volume; 
         }
+        
         public static void SetMusicFolder(string folderPath)
         {
             if (Directory.Exists(folderPath))
             {
                 _soundFolder = folderPath;
-                Init();
+                SetSound();
             }
 
         }
@@ -101,14 +84,27 @@ namespace NoisyKeyboard
 
         static KeyboardListener()
         {
+            
             Init();
         }
 
         private static void Init()
         {
+            var config = Config.GetConfig();
+            foreach (var kv in config.ignoreKeys)
+            {
+                _ignoreKeys.Add(kv.Value);
+            }
+            
+            //Voulume and Sound should be initialized from the config in the MainWindow class.
+
+        }
+
+        private static void SetSound()
+        {
             if (String.IsNullOrEmpty(_soundFolder))
             {
-                _soundFolder =  $"{Directory.GetCurrentDirectory()}\\data\\sounds\\mechanical"; 
+                _soundFolder = $"{Directory.GetCurrentDirectory()}\\data\\sounds\\mechanical2";
             }
             lock (_synchObject)
             {
@@ -121,7 +117,6 @@ namespace NoisyKeyboard
                     _mediaPlayers.Push(mediaPlayer);
                 }
             }
-            
         }
 
         private static IntPtr HookCallback(
