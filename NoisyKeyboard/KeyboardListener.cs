@@ -125,7 +125,7 @@ namespace NoisyKeyboard
             if (nCode >= 0 && wParam == (IntPtr)_onKeyUpOrDown)
             {
                 var vkCode = Marshal.ReadInt32(lParam);
-                Trace.WriteLine($"{nCode},{vkCode}");
+                
                 if (!_ignoreKeys.Contains(vkCode))
                 {
                     
@@ -156,13 +156,12 @@ namespace NoisyKeyboard
         {
             StopNoise();
             if(keyState == KEY_STATE.ON_KEY_DOWN)
-            {
-                Trace.WriteLine("Setting for key down");
+            {                
                 _onKeyUpOrDown = WM_KEYDOWN;
             }
             else
             {
-                Trace.WriteLine("Setting for key up");
+
                 _onKeyUpOrDown = WM_KEYUP;
             }
             if (_hookID == IntPtr.Zero)
