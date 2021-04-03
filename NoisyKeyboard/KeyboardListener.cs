@@ -10,14 +10,32 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Media;
 using System.IO;
-
+using System.Linq;
 namespace NoisyKeyboard
 {
     class KeyboardListener : IDisposable
     {
-        public enum KEY_STATE{
+        public enum KEY_STATE {
             ON_KEY_UP,
             ON_KEY_DOWN
+        }
+        //20,37,38,39,40,44, 160, 162, 164, 163, 165, 255
+        private enum KeyCode
+        {
+            CAPS_LOCK = 20,
+            ARROW_LEFT = 37,
+            ARROW_UP = 38,
+            ARROW_RIGHT = 39,
+            ARROW_DOWN = 40,
+            SHIFT_LEFT = 160,
+            SHIFT_RIGHT = 161,
+            CTRL_LEFT = 162,
+            CTRL_RIGHT = 163,
+            ALT_LEFT = 164,
+            ALT_GR = 162,
+            ALT_RIGHT = 165,
+            DRUCK = 44,
+            FUNCTION = 255
         }
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook,
@@ -44,11 +62,17 @@ namespace NoisyKeyboard
         private static string _soundFolder;
         private static object _synchObject = new object();
         private static int _onKeyUpOrDown = 0x0101;
+        private static HashSet<int> _ignoreKeys = new HashSet<int>();
+        
         public static void SetVolume(double volume)
         {
             if(volume < 10)
             { volume = 10; }
             _volume = volume;
+            foreach( var v in Enum.GetValues(typeof(KeyCode)))
+            {
+                _ignoreKeys.Add((int)v);
+            }
         }
         public static void SetMusicFolder(string folderPath)
         {
@@ -105,8 +129,14 @@ namespace NoisyKeyboard
         {
             if (nCode >= 0 && wParam == (IntPtr)_onKeyUpOrDown)
             {
-                //Call the music play here
-                new Thread(PlaySound).Start();
+                var vkCode = Marshal.ReadInt32(lParam);
+                Trace.WriteLine($"{nCode},{vkCode}");
+                if (!_ignoreKeys.Contains(vkCode))
+                {
+                    
+                    //Call the music play here
+                    new Thread(PlaySound).Start();
+                }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
