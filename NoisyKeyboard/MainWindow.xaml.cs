@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 
+
 namespace NoisyKeyboard
 {
 
@@ -90,7 +91,7 @@ namespace NoisyKeyboard
 
         private void sliderVolume_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            KeyboardListener.PlaySound();
+            KeyboardListener.PlaySound(null);
         }
 
         private void radioBtnSoundOnKeyUp_Checked(object sender, RoutedEventArgs e)

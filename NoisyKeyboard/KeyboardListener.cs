@@ -130,12 +130,12 @@ namespace NoisyKeyboard
                 {
                     
                     //Call the music play here
-                    new Thread(PlaySound).Start();
+                    ThreadPool.QueueUserWorkItem(PlaySound);
                 }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
-        public static void PlaySound()
+        public static void PlaySound(object state)
         {
             lock (_synchObject)
             {
