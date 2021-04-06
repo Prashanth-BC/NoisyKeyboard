@@ -43,18 +43,27 @@ namespace NoisyKeyboard
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private bool disposedValue;
-        private static Stack<MediaPlayer> _mediaPlayers = new Stack<MediaPlayer>();
+        private static Queue<MediaPlayer> _mediaPlayers = new Queue<MediaPlayer>();
         private static double _volume = 10;
         private static string _soundFolder;
         private static object _synchObject = new object();
         private static int _onKeyUpOrDown = 0x0101;
         private static HashSet<int> _ignoreKeys = new HashSet<int>();
+
+        private static TimeSpan _timeSpanBegin = new TimeSpan(0);
         
         public static void SetVolume(double volume)
         {
             if(volume < 10)
             { volume = 10; }
-            _volume = volume; 
+            _volume = volume;
+            lock (_synchObject)
+            {
+                foreach(var mediaplayer in _mediaPlayers)
+                {
+                    mediaplayer.Volume = _volume / 100;
+                }
+            }
         }
         
         public static void SetMusicFolder(string folderPath)
@@ -108,13 +117,17 @@ namespace NoisyKeyboard
             }
             lock (_synchObject)
             {
+
+                string uriString = $"{_soundFolder}\\1.wav";
                 _mediaPlayers.Clear();
                 for (int i = 0; i < 20; i++)
                 {
                     var mediaPlayer = new MediaPlayer();
-                    Directory.GetCurrentDirectory();
-                    mediaPlayer.Open(new Uri($"{_soundFolder}\\1.wav"));
-                    _mediaPlayers.Push(mediaPlayer);
+
+                    
+                    mediaPlayer.Open(new Uri(uriString));
+                    mediaPlayer.Play();
+                    _mediaPlayers.Enqueue(mediaPlayer);
                 }
             }
         }
@@ -139,12 +152,12 @@ namespace NoisyKeyboard
         {
             lock (_synchObject)
             {
-                var mediaPlayer = _mediaPlayers.Pop();
+                var mediaPlayer = _mediaPlayers.Dequeue();
                 mediaPlayer.Dispatcher.Invoke(() => {
-                    mediaPlayer.Stop();
-                    mediaPlayer.Volume = _volume / 100.0;
-                    mediaPlayer.Play();
-                    _mediaPlayers.Push(mediaPlayer);
+                    //mediaPlayer.Stop();
+                    mediaPlayer.Position = _timeSpanBegin;
+                    //mediaPlayer.Play();
+                    _mediaPlayers.Enqueue(mediaPlayer);
                 });
             }
            
