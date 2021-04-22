@@ -4,5 +4,6 @@
   - Typewriter.
   - Mechanical keyboard.
 - The application also provides you to adjust the volume.
+- Download the windows binaries here : [windows binaries](https://github.com/Prashanth-BC/NoisyKeyboard/releases)
 ## Support us on
 - <a href="https://www.patreon.com/bePatron?u=53176927" data-patreon-widget-type="become-patron-button">Become a Patron!
