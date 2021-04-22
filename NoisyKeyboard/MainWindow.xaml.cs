@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -22,10 +23,19 @@ namespace NoisyKeyboard
     public partial class MainWindow : Window
     {
         private bool forceExit = false;
+        Mutex _appMutex;
 
         public MainWindow()
         {
             InitializeComponent();
+            bool aIsNewInstance = false;
+            _appMutex = new Mutex(true, "inc.pacific.noisykeyboard", out aIsNewInstance);
+            if (!aIsNewInstance)
+            {
+                forceExit = true;
+                MessageBox.Show("Already an instance is running...");
+                App.Current.Shutdown();
+            }
             var soundDirectories = Directory.EnumerateDirectories($"{Directory.GetCurrentDirectory()}\\data\\sounds");
             int selectedIndex = 0;
             var config = Config.GetConfig();
